@@ -5,6 +5,11 @@ AUTH_KEY= #this one too
 PROXIED_TEMPFILE=proxied_records.json
 LOGFILE=script.log
 
+noproxy_ops () {
+	# Do your stuff here
+	# like renew Let's Encrypt certs, restart apache2 / nginx...
+}
+
 rm -rf $PROXIED_TEMPFILE
 touch $PROXIED_TEMPFILE
 zones_list=$(curl	-H "X-Auth-Email: $EMAIL" \
@@ -33,7 +38,6 @@ while [ "$zone_req" != "null" ]; do
 	while [ "$rec_req" != "null" -a "$(echo $rec_req | jq '.proxied')" == "true" ]; do
 		echo "$rec_req" >> $PROXIED_TEMPFILE
 		echo "," >> $PROXIED_TEMPFILE
-		# Check if next result exists for coma
 
 		j=$((j+1))
 		rec_req=$(echo $recs_list | jq '.result['$j']')
@@ -46,6 +50,7 @@ done
 # Remove the latest coma
 sed -i '$ d' $PROXIED_TEMPFILE
 
+# Close the array for JSon format
 echo "]" >> $PROXIED_TEMPFILE
 
 put_func () {
@@ -82,9 +87,9 @@ set_var_func () {
 PROXIED=false
 set_var_func
 
-# Do you stuff here
-# like renew Let's Encrypt certs, restart apache2 / nginx...
 echo "All proxies have been disabled!"
+
+noproxy_ops
 
 PROXIED=true
 set_var_func
