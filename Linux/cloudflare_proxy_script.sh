@@ -4,11 +4,44 @@ EMAIL= #please fill this field
 AUTH_KEY= #this one too
 PROXIED_TEMPFILE=proxied_records.json
 LOGFILE=script.log
+SILENT=false
 
 noproxy_ops () {
 	# Do your stuff here
 	# like renew Let's Encrypt certs, restart apache2 / nginx...
 }
+
+for i in "$@"
+do
+case $i in
+    -akf=*|--authkey_file=*)
+    AUTHKEY_PATH="${i#*=}"
+    AUTHKEY=$(< $AUTHKEY_PATH)
+    shift # past argument=value
+    ;;
+    -ak=*|--authkey=*)
+    AUTHKEY="${i#*=}"
+    shift # past argument=value
+    ;;
+    -e=*|--email=*)
+    EMAIL="${i#*=}"
+    shift # past argument=value
+    ;;
+    -op=*|--operation=*)
+    OP_SCRIPT="${i#*=}"
+    shift # past argument=value
+    ;;
+    -s|--silent)
+    SILENT=true
+    shift # past argument with no value
+    ;;
+    *)
+    if [ "$SILENT" = false ] ; then
+        echo "Warning: unrecognized option: ${i}"
+    fi
+    ;;
+esac
+done
 
 rm -rf $PROXIED_TEMPFILE
 touch $PROXIED_TEMPFILE
@@ -72,7 +105,7 @@ set_var_func () {
 		ZONE_ID=$temp
 		temp=$(echo $req | jq '.id')
 		temp="${temp%\"}"
-        temp="${temp#\"}"
+		temp="${temp#\"}"
 		REC_ID=$temp
 		REC_NAME=$(echo $req | jq '.name')
 		REC_CONTENT=$(echo $req | jq '.content')
@@ -87,10 +120,20 @@ set_var_func () {
 PROXIED=false
 set_var_func
 
-echo "All proxies have been disabled!"
+if [ "$SILENT" = false ] ; then
+	echo "All proxies have been disabled!"
+fi
 
 noproxy_ops
 
 PROXIED=true
-set_var_func
-echo "All proxies have been reenabled!"
+
+if [ -z ${OP_SCRIPT+x} ] ; then
+	eval $OP_SCRIPT
+else
+	set_var_func
+fi
+
+if [ "$SILENT" = false ] ; then
+	echo "All proxies have been reenabled!"
+fi
