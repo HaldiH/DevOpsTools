@@ -10,8 +10,10 @@ noproxy_ops () {
 	# Do your stuff here
 	# like renew Let's Encrypt certs, restart apache2 / nginx...
 	# Or entry arguments to launch script / operations
-	$OPERATIONS
-	$OP_SCRIPT
+    # Remove this test if you want to include operations in this script
+    if [ "$SILENT" = false ]; then
+        echo "Please specify some operations to do with -op or -ops"
+    fi
 }
 
 for i in "$@"
@@ -131,7 +133,16 @@ if [ "$SILENT" = false ] ; then
 	echo "All proxies have been disabled!"
 fi
 
-noproxy_ops
+if [ -z "$OPERATIONS" -o -z "$OP_SCRIPT" ]; then
+    noproxy_ops
+else
+    if [ -n "$OPERATIONS" ]; then
+        eval $OPERATIONS
+    fi
+    if [ -n "$OP_SCRIPT" ]; then
+        eval $OP_SCRIPT
+    fi
+fi
 
 PROXIED=true
 set_var_func
