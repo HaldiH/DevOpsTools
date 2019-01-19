@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EMAIL= #please fill this field
+EMAIL= #please fill this field or use arguments
 AUTH_KEY= #this one too
 PROXIED_TEMPFILE=proxied_records.json
 LOGFILE=script.log
@@ -9,28 +9,35 @@ SILENT=false
 noproxy_ops () {
 	# Do your stuff here
 	# like renew Let's Encrypt certs, restart apache2 / nginx...
+	# Or entry arguments to launch script / operations
+	$OPERATIONS
+	$OP_SCRIPT
 }
 
 for i in "$@"
 do
 case $i in
     -akf=*|--authkey_file=*)
-    AUTHKEY_PATH="${i#*=}"
-    AUTHKEY=$(< $AUTHKEY_PATH)
+    AUTH_KEY_PATH="${i#*=}"
+    AUTH_KEY=$(< $AUTHKEY_PATH)
     shift # past argument=value
     ;;
     -ak=*|--authkey=*)
-    AUTHKEY="${i#*=}"
+    AUTH_KEY="${i#*=}"
     shift # past argument=value
     ;;
     -e=*|--email=*)
     EMAIL="${i#*=}"
     shift # past argument=value
     ;;
-    -op=*|--operation=*)
+    -ops=*|--operations_script=*)
     OP_SCRIPT="${i#*=}"
     shift # past argument=value
     ;;
+	-op=*|--operations=*)
+	OPERATIONS="${i#*=}"
+	shift # past argument=value
+	;;
     -s|--silent)
     SILENT=true
     shift # past argument with no value
