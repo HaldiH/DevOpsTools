@@ -2,37 +2,47 @@
 ## CloudFlare Proxy Disable Helper
 ### Usages
 1. Set API Auth Key file location
-..1. ```bash
--akf= //Location of the file containing the API Auth Key
+1.1.
+```shell
+-akf= *Location of the file containing the API Auth Key*
 ```
-..2. ```bash
---authkey_file= //same but longer
+1.2.
+```shell
+--authkey_file= *same but longer*
 ```
 2. Set API Auth Key (as String)
-..1. ```bash
--ak= //String of the API Auth Key
+2.1. 
+```shell
+-ak= *String of the API Auth Key*
 ```
-..2. ```bash
-----authkey= //same
+2.2. 
+```shell
+----authkey= *same*
 ```
 3. Set Email of CloudFlare account
-..1. ```bash
--e= //Email
+3.1. 
+```shell
+-e= *Email*
 ```
-..2. ```bash
---email= //same
+3.2. 
+```shell
+--email= *same*
 ```
 4. Set Script location of operations to do while the CloudFlare proxies are disabled
-..1. ```bash
--ops= //location of script
+4.1. 
+```shell
+-ops= *location of script*
 ```
-..2. ```bash
---operations_script= //same
+4.2. 
+```shell
+--operations_script= *same*
 ```
 5. (WIP) Set silent mode of the script (May be useful for usage in a script), default false
-..1. ```bash
--s //Set silent to true
+5.1. 
+```shell
+-s *Set silent to true*
 ```
-..2. ```bash
---silent //same
+5.2. 
+```shell
+--silent *same*
 ```
