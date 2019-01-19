@@ -134,12 +134,7 @@ fi
 noproxy_ops
 
 PROXIED=true
-
-if [ -z ${OP_SCRIPT+x} ] ; then
-	eval $OP_SCRIPT
-else
-	set_var_func
-fi
+set_var_func
 
 if [ "$SILENT" = false ] ; then
 	echo "All proxies have been reenabled!"
