@@ -1,4 +1,5 @@
 #!/bin/bash
+cd "$(dirname "$0")"
 
 EMAIL= #please fill this field or use arguments
 AUTH_KEY= #this one too
